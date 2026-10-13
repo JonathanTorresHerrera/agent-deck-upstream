@@ -3,7 +3,6 @@ package tmux
 import (
 	"errors"
 	"strings"
-	"syscall"
 	"testing"
 	"time"
 )
@@ -15,21 +14,21 @@ func TestSwitchTypeCommandExitsAndTeardownSucceeds(t *testing.T) {
 		t.Skipf("tmux unavailable: %v", err)
 	}
 	t.Cleanup(func() { _ = s.Kill() })
-	pid, err := s.PanePID()
-	if err != nil {
-		t.Fatal(err)
-	}
 	RefreshSessionCache()
 	if err := s.TypeCommand("/exit"); err != nil {
 		t.Fatal(err)
 	}
 	deadline := time.Now().Add(5 * time.Second)
 	for {
-		if err := syscall.Kill(pid, 0); errors.Is(err, syscall.ESRCH) {
+		exists, err := s.ProbeExists()
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !exists {
 			break
 		}
 		if time.Now().After(deadline) {
-			t.Fatalf("pane process %d did not exit", pid)
+			t.Fatal("tmux session did not exit after /exit")
 		}
 		time.Sleep(50 * time.Millisecond)
 	}
@@ -46,20 +45,20 @@ func TestSwitchClaudeExitKeysLeavePane(t *testing.T) {
 		t.Skipf("tmux unavailable: %v", err)
 	}
 	t.Cleanup(func() { _ = s.Kill() })
-	pid, err := s.PanePID()
-	if err != nil {
-		t.Fatal(err)
-	}
 	if err := s.SendClaudeExitKeys(); err != nil {
 		t.Fatal(err)
 	}
 	deadline := time.Now().Add(5 * time.Second)
 	for {
-		if err := syscall.Kill(pid, 0); errors.Is(err, syscall.ESRCH) {
+		exists, err := s.ProbeExists()
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !exists {
 			return
 		}
 		if time.Now().After(deadline) {
-			t.Fatalf("pane process %d did not receive exit keys", pid)
+			t.Fatal("tmux session did not exit after Claude exit keys")
 		}
 		time.Sleep(50 * time.Millisecond)
 	}
