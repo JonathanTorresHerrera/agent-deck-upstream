@@ -34,6 +34,7 @@ func handleSessionSwitch(profile string, args []string) {
 		fmt.Println("Same-harness native switches are supported where verified; cross-harness directions create fresh targets and wait for native readiness evidence.")
 		fmt.Println("Configured account presence is reported; OAuth authentication is never verified here.")
 		fmt.Println("Pi cross-harness plans use the default account only; named Pi accounts fail explicitly.")
+		fmt.Println(`JSON includes "target_started"; a ready target reports "status":"success", including after recovery.`)
 		fmt.Println()
 		fs.PrintDefaults()
 	}

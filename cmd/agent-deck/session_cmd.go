@@ -1863,6 +1863,7 @@ func handleSessionShow(profile string, args []string) {
 		fmt.Println("Show session details. If no ID is provided, auto-detects current session.")
 		fmt.Println("Account: shows the quoted stored account slot, not a resolved account or login identity.")
 		fmt.Println(`JSON always includes the raw "account" string, including "" when no slot is stored.`)
+		fmt.Println(`JSON always includes "archived"; "archived_at" and "superseded_by" appear when set.`)
 		fmt.Println()
 		fmt.Println("Options:")
 		fs.PrintDefaults()
