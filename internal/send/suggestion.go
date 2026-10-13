@@ -45,7 +45,7 @@ import (
 // CapturePaneFresh already requests) before it is stripped.
 
 // composerMarkers are the prompt glyphs Claude renders at the composer.
-var composerMarkers = []string{"❯", "›"}
+var composerMarkers = []string{"❯", "›", ">"}
 
 // composerMarkerBody returns the remainder of line following the composer
 // marker, and whether a marker was present.
